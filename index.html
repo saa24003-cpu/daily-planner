@@ -8,14 +8,14 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- FontAwesome for specific icons if needed -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Favicon SVG Data URI to prevent 404 favicon errors -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📅</text></svg>">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap');
         body {
             font-family: 'Plus Jakarta Sans', 'Noto Sans JP', sans-serif;
         }
-        /* Custom scrollbar */
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
@@ -29,6 +29,14 @@
         }
         ::-webkit-scrollbar-thumb:hover {
             background: #94a3b8;
+        }
+        @keyframes pulse-ring {
+            0% { transform: scale(0.95); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(0.95); opacity: 0.8; }
+        }
+        .animate-ring {
+            animation: pulse-ring 1s infinite ease-in-out;
         }
     </style>
 </head>
@@ -48,14 +56,13 @@
             </div>
             
             <div class="flex items-center space-x-3">
-                <!-- Alarm Status / Quick Clock -->
                 <div class="bg-slate-100 px-3 py-1.5 rounded-lg flex items-center space-x-2 text-sm font-medium text-slate-700">
                     <i data-lucide="clock" class="w-4 h-4 text-indigo-600"></i>
                     <span id="current-time-display">00:00:00</span>
                 </div>
-                <!-- Sound Toggle -->
-                <button id="toggle-sound-btn" class="p-2 text-slate-500 hover:text-indigo-600 hover:bg-slate-100 rounded-lg transition-colors" title="アラーム音テスト">
-                    <i data-lucide="bell" class="w-5 h-5"></i>
+                <button id="toggle-sound-btn" class="p-2 text-slate-500 hover:text-indigo-600 hover:bg-slate-100 rounded-lg transition-colors flex items-center gap-1 text-xs font-semibold" title="アラーム試聴">
+                    <i data-lucide="bell-ring" class="w-4 h-4"></i>
+                    <span class="hidden sm:inline">音のテスト</span>
                 </button>
             </div>
         </div>
@@ -96,31 +103,27 @@
                 </div>
 
                 <!-- Calendar Days Grid -->
-                <div id="calendar-days-grid" class="grid grid-cols-7 gap-1 text-sm">
-                    <!-- Dynamic Days Insertion -->
-                </div>
+                <div id="calendar-days-grid" class="grid grid-cols-7 gap-1 text-sm"></div>
             </div>
 
-            <!-- Quick Habit Tracker Widget -->
+            <!-- Habit Tracker Widget -->
             <div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm flex-1 flex flex-col">
                 <div class="flex items-center justify-between mb-3">
                     <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2">
-                        <i data-lucide="sparkles" class="w-4 h-4 text-amber-500"></i> Daily Habit Tracker
+                        <i data-lucide="sparkles" class="w-4 h-4 text-amber-500"></i> 今日の習慣・ルーティン
                     </h3>
                     <span id="habit-completion-rate" class="text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600">0% 完了</span>
                 </div>
-                <p class="text-xs text-slate-500 mb-4">選択した日のルーティンチェックリスト</p>
+                <p class="text-xs text-slate-500 mb-4">歯磨き・ご飯・片付けなどの日常チェック</p>
                 
-                <div id="habits-list" class="space-y-2.5 overflow-y-auto max-h-60 pr-1 flex-1">
-                    <!-- Dynamic Habits -->
-                </div>
+                <div id="habits-list" class="space-y-2.5 overflow-y-auto max-h-60 pr-1 flex-1"></div>
             </div>
         </section>
 
-        <!-- Right Column: Date Details, Timeline, & Task List (8 cols) -->
+        <!-- Right Column: Schedule & Task List (8 cols) -->
         <section class="lg:col-span-8 flex flex-col space-y-6">
 
-            <!-- Selected Date Summary Banner -->
+            <!-- Banner -->
             <div class="bg-gradient-to-r from-indigo-600 to-indigo-700 rounded-2xl p-6 text-white shadow-md flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
                     <div class="flex items-center space-x-2 opacity-90 text-sm mb-1">
@@ -148,9 +151,8 @@
                 </button>
             </div>
 
-            <!-- Tab Content 1: List View -->
+            <!-- Tab 1: List View -->
             <div id="view-list" class="space-y-4">
-                <!-- Filter categories -->
                 <div class="flex gap-2 overflow-x-auto pb-1">
                     <button data-filter="all" class="filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-white shadow-sm">すべて</button>
                     <button data-filter="routine" class="filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-white text-slate-600 border border-slate-200 hover:bg-slate-50">ルーティン</button>
@@ -158,21 +160,16 @@
                     <button data-filter="event" class="filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-white text-slate-600 border border-slate-200 hover:bg-slate-50">イベント/予定</button>
                 </div>
 
-                <!-- Event Cards List -->
-                <div id="events-container" class="space-y-3 min-h-[300px]">
-                    <!-- Dynamically Generated Cards -->
-                </div>
+                <div id="events-container" class="space-y-3 min-h-[300px]"></div>
             </div>
 
-            <!-- Tab Content 2: Timeline View -->
+            <!-- Tab 2: Timeline View -->
             <div id="view-timeline" class="hidden bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm">
                 <div class="text-xs font-medium text-slate-500 mb-4 flex items-center justify-between">
                     <span><i data-lucide="info" class="w-3.5 h-3.5 inline mr-1"></i> 24時間のスケジュール配置</span>
-                    <span class="text-indigo-600">青線 = 現在時刻</span>
+                    <span class="text-indigo-600">※時間が重なる予定も一覧できます</span>
                 </div>
-                <div class="relative overflow-y-auto max-h-[500px] pr-2" id="timeline-container">
-                    <!-- Timeline Hours and Events generated via JavaScript -->
-                </div>
+                <div class="relative overflow-y-auto max-h-[500px] pr-2" id="timeline-container"></div>
             </div>
 
         </section>
@@ -194,7 +191,6 @@
             <form id="item-form" class="p-6 space-y-4 overflow-y-auto flex-1">
                 <input type="hidden" id="item-id">
                 
-                <!-- Category Selector -->
                 <div>
                     <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">カテゴリー</label>
                     <div class="grid grid-cols-3 gap-2">
@@ -222,13 +218,11 @@
                     </div>
                 </div>
 
-                <!-- Title Input -->
                 <div>
                     <label for="item-title" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">タイトル <span class="text-rose-500">*</span></label>
-                    <input type="text" id="item-title" required placeholder="例: 算数のドリル, 歯磨き, サッカーの練習" class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <input type="text" id="item-title" required placeholder="例: 漢字ドリル, 朝の歯磨き, 夜ご飯" class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
                 </div>
 
-                <!-- Time Range -->
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label for="item-start-time" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">開始時間 <span class="text-rose-500">*</span></label>
@@ -240,7 +234,6 @@
                     </div>
                 </div>
 
-                <!-- Homework-specific Fields -->
                 <div id="homework-fields" class="hidden p-3.5 bg-amber-50/60 rounded-xl border border-amber-100 space-y-3">
                     <div class="grid grid-cols-2 gap-3">
                         <div>
@@ -254,13 +247,12 @@
                     </div>
                 </div>
 
-                <!-- Alarm Option -->
                 <div class="flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-100">
                     <div class="flex items-center space-x-2">
-                        <i data-lucide="bell" class="w-4 h-4 text-slate-600"></i>
+                        <i data-lucide="bell" class="w-4 h-4 text-amber-500"></i>
                         <div>
-                            <p class="text-xs font-bold text-slate-700">時間になったらアラームで通知</p>
-                            <p class="text-[10px] text-slate-400">開始時刻に音とポップアップでお知らせします</p>
+                            <p class="text-xs font-bold text-slate-700">連続鳴動アラームを有効化</p>
+                            <p class="text-[10px] text-slate-400">開始時間になると止めるまで鳴り続けます</p>
                         </div>
                     </div>
                     <label class="relative inline-flex items-center cursor-pointer">
@@ -269,13 +261,11 @@
                     </label>
                 </div>
 
-                <!-- Memo -->
                 <div>
                     <label for="item-memo" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">メモ</label>
-                    <textarea id="item-memo" rows="2" placeholder="持ち物や詳細メモなど" class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+                    <textarea id="item-memo" rows="2" placeholder="持ち物や注意事項など" class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
                 </div>
 
-                <!-- Action Buttons -->
                 <div class="pt-3 flex justify-end space-x-2 border-t border-slate-100">
                     <button type="button" id="cancel-modal-btn" class="px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded-xl transition-colors">キャンセル</button>
                     <button type="submit" class="px-5 py-2 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl shadow-md shadow-indigo-100 transition-all">保存する</button>
@@ -284,31 +274,36 @@
         </div>
     </div>
 
-    <!-- Alarm Trigger Modal -->
-    <div id="alarm-trigger-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 flex items-center justify-center hidden p-4 animate-bounce-short">
-        <div class="bg-white rounded-3xl p-6 max-w-sm w-full text-center shadow-2xl border-2 border-amber-400 space-y-4">
-            <div class="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto text-amber-500 animate-pulse">
-                <i data-lucide="bell-ring" class="w-8 h-8"></i>
+    <!-- Alarm Ringing Overlay Modal (Continuous Loop) -->
+    <div id="alarm-trigger-modal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-md z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-white rounded-3xl p-6 max-w-sm w-full text-center shadow-2xl border-4 border-amber-400 space-y-4 animate-ring">
+            <div class="w-20 h-20 bg-amber-100 rounded-full flex items-center justify-center mx-auto text-amber-500 animate-bounce">
+                <i data-lucide="bell-ring" class="w-10 h-10"></i>
             </div>
             <div>
-                <span class="text-xs font-bold text-amber-600 bg-amber-50 px-2.5 py-1 rounded-full uppercase tracking-wider">アラーム通知</span>
-                <h3 id="alarm-modal-title" class="text-xl font-extrabold text-slate-900 mt-2">予定の時間です！</h3>
-                <p id="alarm-modal-time" class="text-sm font-semibold text-indigo-600 mt-1">10:00</p>
-                <p id="alarm-modal-memo" class="text-xs text-slate-500 mt-2">宿題の時間です。集中して頑張りましょう！</p>
+                <span class="text-xs font-bold text-rose-600 bg-rose-50 px-3 py-1 rounded-full uppercase tracking-wider border border-rose-200">⏰ アラーム発動中</span>
+                <h3 id="alarm-modal-title" class="text-xl font-extrabold text-slate-900 mt-3">時間になりました！</h3>
+                <p id="alarm-modal-time" class="text-base font-bold text-indigo-600 mt-1">10:00</p>
+                <p id="alarm-modal-memo" class="text-xs text-slate-600 mt-2 bg-slate-50 p-2.5 rounded-xl border border-slate-200">宿題の時間です。集中して取り組もう！</p>
             </div>
-            <button id="dismiss-alarm-btn" class="w-full py-3 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl shadow-lg shadow-amber-200 transition-all">
-                確認してアラームを止める
+            <button id="dismiss-alarm-btn" class="w-full py-3.5 bg-rose-500 hover:bg-rose-600 text-white font-extrabold rounded-xl shadow-lg shadow-rose-200 transition-all text-sm flex items-center justify-center gap-2">
+                <i data-lucide="volume-x" class="w-5 h-5"></i>
+                <span>アラームを止める</span>
             </button>
         </div>
     </div>
 
     <script>
         // State Management
-        let currentDate = new Date(); // Displayed month view
-        let selectedDate = new Date(); // Currently selected day
-        let events = {}; // Format: { "YYYY-MM-DD": [ { id, category, title, startTime, endTime, pages, estimatedTime, alarm, memo, completed } ] }
+        let currentDate = new Date();
+        let selectedDate = new Date();
+        let events = {}; 
         let currentFilter = 'all';
-        let triggeredAlarms = new Set(); // Track triggered alarms for the day to prevent duplicate alerts
+        let triggeredAlarms = new Set(); 
+        
+        // Audio Loop State
+        let alarmIntervalId = null;
+        let audioCtx = null;
 
         // DOM Elements
         const calendarGrid = document.getElementById('calendar-days-grid');
@@ -322,12 +317,10 @@
         const habitsListContainer = document.getElementById('habits-list');
         const habitCompletionRateEl = document.getElementById('habit-completion-rate');
 
-        // Modal Elements
         const itemModal = document.getElementById('item-modal');
         const itemForm = document.getElementById('item-form');
         const homeworkFields = document.getElementById('homework-fields');
 
-        // Initialize App
         window.onload = function() {
             loadFromLocalStorage();
             renderCalendar();
@@ -337,7 +330,6 @@
             lucide.createIcons();
         };
 
-        // Date Helpers
         function formatDateKey(date) {
             const y = date.getFullYear();
             const m = String(date.getMonth() + 1).padStart(2, '0');
@@ -350,7 +342,6 @@
             return `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日 (${days[date.getDay()]})`;
         }
 
-        // LocalStorage Management
         function saveToLocalStorage() {
             localStorage.setItem('dayplanner_events', JSON.stringify(events));
         }
@@ -364,18 +355,17 @@
                     events = {};
                 }
             } else {
-                // Pre-populate sample data for today if empty
+                // Initial Default Data
                 const todayKey = formatDateKey(new Date());
                 events[todayKey] = [
-                    { id: '1', category: 'routine', title: '朝の歯磨き＆洗顔', startTime: '07:00', endTime: '07:15', alarm: true, completed: true },
-                    { id: '2', category: 'homework', title: '数学ワーク', startTime: '16:00', endTime: '17:00', pages: 'P.20-P.24', estimatedTime: '60', alarm: true, completed: false },
-                    { id: '3', category: 'event', title: '習い事（英語塾）', startTime: '17:30', endTime: '18:30', memo: '教科書とノートを持っていく', alarm: false, completed: false }
+                    { id: '1', category: 'routine', title: '朝の歯磨き＆洗顔', startTime: '07:00', endTime: '07:15', alarm: true, completed: false },
+                    { id: '2', category: 'homework', title: '算数ドリル', startTime: '16:00', endTime: '17:00', pages: 'P.10-P.12', estimatedTime: '45', alarm: true, completed: false },
+                    { id: '3', category: 'routine', title: '夜ご飯', startTime: '19:00', endTime: '19:30', alarm: false, completed: false }
                 ];
                 saveToLocalStorage();
             }
         }
 
-        // Calendar Rendering Logic
         function renderCalendar() {
             calendarGrid.innerHTML = '';
             
@@ -400,7 +390,7 @@
                 calendarGrid.appendChild(div);
             }
 
-            // Current Month days
+            // Days of current month
             for (let i = 1; i <= lastDay; i++) {
                 const thisDate = new Date(year, month, i);
                 const dateKey = formatDateKey(thisDate);
@@ -409,7 +399,6 @@
                 const button = document.createElement('button');
                 button.className = `h-9 text-xs font-medium rounded-lg flex flex-col items-center justify-center relative transition-all`;
                 
-                // Active/Today/Selected Styling
                 if (dateKey === selectedStr) {
                     button.classList.add('bg-indigo-600', 'text-white', 'font-bold', 'shadow-md', 'shadow-indigo-200');
                 } else if (dateKey === todayStr) {
@@ -420,7 +409,6 @@
 
                 button.innerHTML = `<span>${i}</span>`;
 
-                // Add Indicator Dot if events exist
                 if (dayEvents.length > 0) {
                     const dotContainer = document.createElement('div');
                     dotContainer.className = "flex space-x-0.5 mt-0.5";
@@ -429,15 +417,9 @@
                     const hasHomework = dayEvents.some(e => e.category === 'homework');
                     const hasEvent = dayEvents.some(e => e.category === 'event');
 
-                    if (hasRoutine) {
-                        dotContainer.innerHTML += `<span class="w-1 h-1 rounded-full ${dateKey === selectedStr ? 'bg-white' : 'bg-indigo-400'}"></span>`;
-                    }
-                    if (hasHomework) {
-                        dotContainer.innerHTML += `<span class="w-1 h-1 rounded-full ${dateKey === selectedStr ? 'bg-amber-200' : 'bg-amber-500'}"></span>`;
-                    }
-                    if (hasEvent) {
-                        dotContainer.innerHTML += `<span class="w-1 h-1 rounded-full ${dateKey === selectedStr ? 'bg-emerald-200' : 'bg-emerald-500'}"></span>`;
-                    }
+                    if (hasRoutine) dotContainer.innerHTML += `<span class="w-1 h-1 rounded-full ${dateKey === selectedStr ? 'bg-white' : 'bg-indigo-400'}"></span>`;
+                    if (hasHomework) dotContainer.innerHTML += `<span class="w-1 h-1 rounded-full ${dateKey === selectedStr ? 'bg-amber-200' : 'bg-amber-500'}"></span>`;
+                    if (hasEvent) dotContainer.innerHTML += `<span class="w-1 h-1 rounded-full ${dateKey === selectedStr ? 'bg-emerald-200' : 'bg-emerald-500'}"></span>`;
 
                     button.appendChild(dotContainer);
                 }
@@ -452,7 +434,6 @@
             }
         }
 
-        // Render Selected Date View
         function renderSelectedDate() {
             const key = formatDateKey(selectedDate);
             const dayEvents = events[key] || [];
@@ -462,7 +443,6 @@
             const isToday = formatDateKey(new Date()) === key;
             selectedDateHeading.textContent = isToday ? "本日の予定・タスク" : `${selectedDate.getMonth() + 1}月${selectedDate.getDate()}日の予定`;
 
-            // Stats
             const homeworkCount = dayEvents.filter(e => e.category === 'homework').length;
             eventCountEl.textContent = dayEvents.length;
             homeworkCountEl.textContent = homeworkCount;
@@ -472,7 +452,6 @@
             renderTimeline(dayEvents);
         }
 
-        // Render Cards List View
         function renderEventsList(dayEvents) {
             eventsContainer.innerHTML = '';
 
@@ -482,15 +461,14 @@
                 eventsContainer.innerHTML = `
                     <div class="bg-white rounded-2xl p-8 border border-dashed border-slate-200 text-center text-slate-400">
                         <i data-lucide="calendar-x" class="w-10 h-10 mx-auto mb-2 opacity-50"></i>
-                        <p class="text-sm font-medium">登録されている予定・タスクはありません</p>
-                        <p class="text-xs mt-1">「予定・宿題を追加」ボタンから作成できます</p>
+                        <p class="text-sm font-medium">登録されている予定はありません</p>
+                        <p class="text-xs mt-1">「予定・宿題を追加」ボタンから追加できます</p>
                     </div>
                 `;
                 lucide.createIcons();
                 return;
             }
 
-            // Sort by start time
             filteredEvents.sort((a, b) => a.startTime.localeCompare(b.startTime));
 
             filteredEvents.forEach(item => {
@@ -516,12 +494,11 @@
                                 <span class="text-xs font-semibold text-slate-500 flex items-center gap-1">
                                     <i data-lucide="clock" class="w-3 h-3"></i> ${item.startTime} ${item.endTime ? '〜 ' + item.endTime : ''}
                                 </span>
-                                ${item.alarm ? '<i data-lucide="bell" class="w-3 h-3 text-amber-500" title="アラームあり"></i>' : ''}
+                                ${item.alarm ? '<i data-lucide="bell-ring" class="w-3 h-3 text-amber-500" title="連続アラーム付き"></i>' : ''}
                             </div>
                             
                             <h4 class="font-bold text-slate-800 text-sm ${item.completed ? 'line-through text-slate-400' : ''}">${escapeHtml(item.title)}</h4>
                             
-                            <!-- Homework Specific details -->
                             ${item.category === 'homework' && (item.pages || item.estimatedTime) ? `
                                 <div class="flex items-center gap-3 text-xs text-amber-700 bg-amber-50/80 px-2.5 py-1 rounded-lg w-fit">
                                     ${item.pages ? `<span><i data-lucide="book" class="w-3 h-3 inline mr-1"></i>${escapeHtml(item.pages)}</span>` : ''}
@@ -533,7 +510,6 @@
                         </div>
                     </div>
 
-                    <!-- Options -->
                     <div class="flex items-center space-x-1 shrink-0">
                         <button onclick="editItem('${item.id}')" class="p-1.5 text-slate-400 hover:text-indigo-600 rounded-lg hover:bg-slate-100 transition-colors">
                             <i data-lucide="pencil" class="w-4 h-4"></i>
@@ -550,13 +526,12 @@
             lucide.createIcons();
         }
 
-        // Render Quick Habits List Sidebar
         function renderHabitsTracker(dayEvents) {
             habitsListContainer.innerHTML = '';
             const routines = dayEvents.filter(e => e.category === 'routine');
 
             if (routines.length === 0) {
-                habitsListContainer.innerHTML = `<p class="text-xs text-slate-400 text-center py-4">ルーティンが設定されていません</p>`;
+                habitsListContainer.innerHTML = `<p class="text-xs text-slate-400 text-center py-4">ルーティンが登録されていません</p>`;
                 habitCompletionRateEl.textContent = '0%';
                 return;
             }
@@ -585,30 +560,26 @@
             });
         }
 
-        // Render 24H Timeline Graph
         function renderTimeline(dayEvents) {
             const container = document.getElementById('timeline-container');
             container.innerHTML = '';
 
-            // 24 Hour blocks
             for (let hour = 0; hour < 24; hour++) {
                 const hourStr = String(hour).padStart(2, '0');
-                
                 const hourRow = document.createElement('div');
-                hourRow.className = "flex items-start h-12 border-b border-slate-100 relative group";
+                hourRow.className = "flex items-start h-12 border-b border-slate-100 relative";
                 
                 hourRow.innerHTML = `
                     <div class="w-12 text-[11px] font-bold text-slate-400 shrink-0 select-none">${hourStr}:00</div>
                     <div class="flex-1 h-full relative border-l border-slate-200"></div>
                 `;
 
-                // Add events corresponding to this hour
                 dayEvents.forEach(item => {
                     const startH = parseInt(item.startTime.split(':')[0]);
                     const startM = parseInt(item.startTime.split(':')[1]);
 
                     if (startH === hour) {
-                        const topOffset = (startM / 60) * 48; // 48px is height of 1 hour block
+                        const topOffset = (startM / 60) * 48;
                         const eventEl = document.createElement('div');
                         
                         let bgColor = 'bg-indigo-100 border-indigo-300 text-indigo-800';
@@ -632,7 +603,6 @@
             }
         }
 
-        // Actions: Toggle Complete, Edit, Delete
         function toggleComplete(id) {
             const key = formatDateKey(selectedDate);
             if (!events[key]) return;
@@ -672,7 +642,6 @@
             document.getElementById('item-alarm').checked = item.alarm || false;
             document.getElementById('item-memo').value = item.memo || '';
 
-            // Category radios
             const categoryRadios = document.getElementsByName('category');
             categoryRadios.forEach(radio => {
                 if (radio.value === item.category) radio.checked = true;
@@ -684,7 +653,6 @@
             lucide.createIcons();
         }
 
-        // Modal Helpers
         function toggleHomeworkFields(category) {
             if (category === 'homework') {
                 homeworkFields.classList.remove('hidden');
@@ -693,9 +661,7 @@
             }
         }
 
-        // Event Listeners Setup
         function setupEventListeners() {
-            // Calendar Month Navigation
             document.getElementById('prev-month-btn').onclick = () => {
                 currentDate.setMonth(currentDate.getMonth() - 1);
                 renderCalendar();
@@ -711,7 +677,6 @@
                 renderSelectedDate();
             };
 
-            // Tabs
             const tabListBtn = document.getElementById('tab-list-btn');
             const tabTimelineBtn = document.getElementById('tab-timeline-btn');
             const viewList = document.getElementById('view-list');
@@ -731,7 +696,6 @@
                 viewList.classList.add('hidden');
             };
 
-            // Category Filter Buttons
             document.querySelectorAll('.filter-btn').forEach(btn => {
                 btn.onclick = () => {
                     document.querySelectorAll('.filter-btn').forEach(b => {
@@ -743,7 +707,6 @@
                 };
             });
 
-            // Open/Close Add Modal
             document.getElementById('open-add-modal-btn').onclick = () => {
                 itemForm.reset();
                 document.getElementById('item-id').value = '';
@@ -755,12 +718,10 @@
             document.getElementById('close-modal-btn').onclick = () => itemModal.classList.add('hidden');
             document.getElementById('cancel-modal-btn').onclick = () => itemModal.classList.add('hidden');
 
-            // Form Category Switch Change
             document.getElementsByName('category').forEach(radio => {
                 radio.onchange = (e) => toggleHomeworkFields(e.target.value);
             });
 
-            // Form Submit
             itemForm.onsubmit = (e) => {
                 e.preventDefault();
 
@@ -803,25 +764,24 @@
                 renderSelectedDate();
             };
 
-            // Alarm dismissal
+            // Stop Continuous Alarm
             document.getElementById('dismiss-alarm-btn').onclick = () => {
+                stopAlarmSound();
                 document.getElementById('alarm-trigger-modal').classList.add('hidden');
             };
 
-            // Sound test
+            // Test sound button
             document.getElementById('toggle-sound-btn').onclick = () => {
-                playAlarmSound();
+                playSingleBeep();
             };
         }
 
-        // Realtime Clock & Alarm System
         function startClockAndAlarmChecker() {
             setInterval(() => {
                 const now = new Date();
                 const timeStr = now.toTimeString().split(' ')[0];
                 document.getElementById('current-time-display').textContent = timeStr;
 
-                // Check alarms for today
                 const todayKey = formatDateKey(now);
                 const currentHM = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
 
@@ -831,7 +791,7 @@
                             const alarmKey = `${todayKey}-${item.id}-${currentHM}`;
                             if (!triggeredAlarms.has(alarmKey)) {
                                 triggeredAlarms.add(alarmKey);
-                                triggerAlarm(item);
+                                triggerContinuousAlarm(item);
                             }
                         }
                     });
@@ -839,42 +799,77 @@
             }, 1000);
         }
 
-        function triggerAlarm(item) {
-            playAlarmSound();
-            
+        // Trigger loop alarm
+        function triggerContinuousAlarm(item) {
+            startAlarmSoundLoop();
+
             document.getElementById('alarm-modal-title').textContent = item.title;
             document.getElementById('alarm-modal-time').textContent = `開始時刻: ${item.startTime}`;
-            document.getElementById('alarm-modal-memo').textContent = item.memo || (item.pages ? `対象範囲: ${item.pages}` : '設定された予定の時間です。');
+            document.getElementById('alarm-modal-memo').textContent = item.memo || (item.pages ? `宿題範囲: ${item.pages}` : '予定の時間になりました。確認してください！');
 
             document.getElementById('alarm-trigger-modal').classList.remove('hidden');
             lucide.createIcons();
         }
 
-        // Web Audio API Sound Generator (No external audio asset needed)
-        function playAlarmSound() {
+        // Starts an infinite loop of beep tones every 0.8 seconds until stopped
+        function startAlarmSoundLoop() {
+            stopAlarmSound(); // Clear any existing instance
+            
+            playSingleBeep(); // Play immediately
+            alarmIntervalId = setInterval(() => {
+                playSingleBeep();
+            }, 800);
+        }
+
+        // Stops the looping alarm sound
+        function stopAlarmSound() {
+            if (alarmIntervalId) {
+                clearInterval(alarmIntervalId);
+                alarmIntervalId = null;
+            }
+        }
+
+        // Synthesize single electronic beep pulse (Web Audio API)
+        function playSingleBeep() {
             try {
-                const AudioContext = window.AudioContext || window.webkitAudioContext;
-                if (!AudioContext) return;
-                const ctx = new AudioContext();
+                if (!audioCtx) {
+                    const AudioContext = window.AudioContext || window.webkitAudioContext;
+                    if (AudioContext) audioCtx = new AudioContext();
+                }
+                
+                if (!audioCtx) return;
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
 
-                const now = ctx.currentTime;
-                const osc = ctx.createOscillator();
-                const gain = ctx.createGain();
+                const now = audioCtx.currentTime;
+                
+                // Tone 1
+                const osc1 = audioCtx.createOscillator();
+                const gain1 = audioCtx.createGain();
+                osc1.type = 'sine';
+                osc1.frequency.setValueAtTime(880, now); // A5
+                gain1.gain.setValueAtTime(0.3, now);
+                gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+                osc1.connect(gain1);
+                gain1.connect(audioCtx.destination);
+                osc1.start(now);
+                osc1.stop(now + 0.15);
 
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(587.33, now); // D5
-                osc.frequency.setValueAtTime(880, now + 0.15); // A5
+                // Tone 2 (Higher Beep)
+                const osc2 = audioCtx.createOscillator();
+                const gain2 = audioCtx.createGain();
+                osc2.type = 'sine';
+                osc2.frequency.setValueAtTime(1760, now + 0.2); // A6
+                gain2.gain.setValueAtTime(0.3, now + 0.2);
+                gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+                osc2.connect(gain2);
+                gain2.connect(audioCtx.destination);
+                osc2.start(now + 0.2);
+                osc2.stop(now + 0.4);
 
-                gain.gain.setValueAtTime(0.3, now);
-                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
-
-                osc.connect(gain);
-                gain.connect(ctx.destination);
-
-                osc.start(now);
-                osc.stop(now + 0.4);
             } catch(e) {
-                console.log('Audio playback error', e);
+                console.log('Audio playback context error', e);
             }
         }
 
